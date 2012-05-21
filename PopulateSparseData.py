@@ -8,7 +8,7 @@ def getFirstValueInColumn(col):
         if str(fileDataCollection[y][col]).strip() != "":
             return fileDataCollection[y][col]
     
-    return -10000
+    return 0.0
 
 def main():
     

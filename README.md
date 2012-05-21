@@ -7,6 +7,7 @@ Each script is used as part of a pipeline process to get the data into an integr
 ParseMetricData.py
 -This script is the first step in the pipeline.  It will parse through a directory containing the metric data and gather all metric runs into a single large csv file.  This file will have the timestamp as the first column, and the superset of all captured metrics as the columns.
 -Note that this produces a fairly sparse matrix of data - as the metrics are captured at different timestamps so much of the timestamps have blank cells for the metric data
+-The user has the ability to specify the size of the time slices.  This is done with an additional parameter of milliseconds.
 
 PopulateSparseData.py
 -This script consumes the csv file produced by the previous script and fills in the missing components of the sparse matrix.
@@ -29,7 +30,7 @@ Example calling sequence
 Assuming the DataCleansingTool directory is installed at the same level as the extracted run data, the following commands will transform the data and output the required files into an output directory.
 
     DataCleansingTool: mkdir output
-    DataCleansingTool: python ParseMetricData.py ../LD_A1_56p_2ppn_28n_IO-BASIC_even_RAWDATA/POWER-COOLING_perMetricPerTrial/ output/
+    DataCleansingTool: python ParseMetricData.py ../LD_A1_56p_2ppn_28n_IO-BASIC_even_RAWDATA/POWER-COOLING_perMetricPerTrial/ output/ <500>
     DataCleansingTool: python PopulateSparseData.py output/TimeData1.csv
     DataCleansingTool: python PopulateSparseData.py output/TimeData2.csv
     DataCleansingTool: python PopulateSparseData.py output/TimeData3.csv
