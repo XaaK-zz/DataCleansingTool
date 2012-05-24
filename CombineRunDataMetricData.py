@@ -77,12 +77,16 @@ def main():
     print "Writing file..."
     fileData = open(outputFile,"w")
     for data in newCollection:
+        row = ""
         for rowData in data:
-            if str(rowData).strip() == "":
-                fileData.write(str(rowData.strip()))
-            else:
-                fileData.write(str(rowData.strip()) + ",")
-        fileData.write("\n")
+            if str(rowData).strip() != "":
+                #fileData.write(str(rowData.strip()))
+                #row = row + str(rowData.strip())
+            #else:
+                #fileData.write(str(rowData.strip()) + ",")
+                row = row + str(rowData.strip()) + ","
+        
+        fileData.write(row[0:-1] + "\n")
     fileData.close()
     
     
