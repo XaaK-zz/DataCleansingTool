@@ -3,6 +3,8 @@ import os
 
 def main():
 
+    minMetricDelta = 5
+    
     if (len(sys.argv) < 2):
         print("Usage: python MasterRun.py [Path to Power Metric Data] [Output Path]")
         quit()
@@ -47,9 +49,20 @@ def main():
     
     print "Calling CombineRunDataMetricData.py"
     
-    os.system("python CombineRunDataMetricData.py " + os.path.join(outputPath,"NormalizedTimeData1.csvConverted.csv") + " " + os.path.join(outputPath,"MPICountsRun1.csv") + " " + os.path.join(outputPath,"FinalOutput1.csv"))
-    os.system("python CombineRunDataMetricData.py " + os.path.join(outputPath,"NormalizedTimeData2.csvConverted.csv") + " " + os.path.join(outputPath,"MPICountsRun2.csv") + " " + os.path.join(outputPath,"FinalOutput2.csv"))
-    os.system("python CombineRunDataMetricData.py " + os.path.join(outputPath,"NormalizedTimeData3.csvConverted.csv") + " " + os.path.join(outputPath,"MPICountsRun3.csv") + " " + os.path.join(outputPath,"FinalOutput3.csv"))
+    os.system("python CombineRunDataMetricData.py " + os.path.join(outputPath,"NormalizedTimeData1.csvConverted.csv") + " " + os.path.join(outputPath,"MPICountsRun1.csv") + " " + os.path.join(outputPath,"CombinedData1.csv"))
+    os.system("python CombineRunDataMetricData.py " + os.path.join(outputPath,"NormalizedTimeData2.csvConverted.csv") + " " + os.path.join(outputPath,"MPICountsRun2.csv") + " " + os.path.join(outputPath,"CombinedData2.csv"))
+    os.system("python CombineRunDataMetricData.py " + os.path.join(outputPath,"NormalizedTimeData3.csvConverted.csv") + " " + os.path.join(outputPath,"MPICountsRun3.csv") + " " + os.path.join(outputPath,"CombinedData3.csv"))
     
+    print "--------------------------------------------------------\n"
+    print "Calling GenerateDeltas.py"
+    os.system("python GenerateDeltas.py " + os.path.join(outputPath,"CombinedData1.csv") + " " + os.path.join(outputPath,"CombinedDataWithDeltas1.csv"))
+    os.system("python GenerateDeltas.py " + os.path.join(outputPath,"CombinedData2.csv") + " " + os.path.join(outputPath,"CombinedDataWithDeltas2.csv"))
+    os.system("python GenerateDeltas.py " + os.path.join(outputPath,"CombinedData3.csv") + " " + os.path.join(outputPath,"CombinedDataWithDeltas3.csv"))
+    
+    print "--------------------------------------------------------\n"
+    print "Calling RemoveUnchangingMetrics.py"
+    os.system("python RemoveUnchangingMetrics.py " + os.path.join(outputPath,"CombinedDataWithDeltas1.csv") + " " + os.path.join(outputPath,"FinalOutput1.csv") + " " + str(minMetricDelta))
+    os.system("python RemoveUnchangingMetrics.py " + os.path.join(outputPath,"CombinedDataWithDeltas2.csv") + " " + os.path.join(outputPath,"FinalOutput2.csv") + " " + str(minMetricDelta))
+    os.system("python RemoveUnchangingMetrics.py " + os.path.join(outputPath,"CombinedDataWithDeltas3.csv") + " " + os.path.join(outputPath,"FinalOutput3.csv") + " " + str(minMetricDelta))
 
 main()

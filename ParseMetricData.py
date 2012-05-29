@@ -56,12 +56,12 @@ def gatherMetrics(folder):
 
 
 
-def updateTimeSlices(timeCollection,destTimeCollection,timeDelta):
+def updateTimeSlices(timeCollection,destTimeCollection,timeDelta,metricData):
     currentBottomTime = datetime.datetime.strptime(sorted(timeCollection.iterkeys())[0],"%Y-%m-%d %H:%M:%S.%f") - datetime.timedelta(0,0,0,timeDelta)
     currentTopTime = currentBottomTime + datetime.timedelta(0,0,0,timeDelta)
         
     while True:
-        tempCollection = ["" for x in range(len(metricsRun1))]
+        tempCollection = ["" for x in range(len(metricData))]
         count = 0
         #print "Bottom: " + str(currentBottomTime)
         #print "Top: " + str(currentTopTime)
@@ -76,7 +76,12 @@ def updateTimeSlices(timeCollection,destTimeCollection,timeDelta):
                 
                 count += 1
                 for x in range(0,len(timeCollection[key])):
-                    
+                    if len(tempCollection) <= x:
+                        print "Error - size issue. x: " + str(x) + "len(tempCollection): " + str(len(tempCollection))
+                        print "len(metricsRun1): " + str(len(metricsRun1))
+                        print "len(metricsRun2): " + str(len(metricsRun2))
+                        print "len(metricsRun3): " + str(len(metricsRun3))
+                    #print x    
                     if tempCollection[x] == "":
                         if timeCollection[key][x] == "":
                             currentVal = 0.0
@@ -263,9 +268,9 @@ def main():
         gatherMetricData(os.path.join(sys.argv[1],file),timeDelta)
     
     if timeDelta != -1:
-        updateTimeSlices(timeCollection1,normalizedTimeCollection1,timeDelta)
-        updateTimeSlices(timeCollection2,normalizedTimeCollection2,timeDelta)
-        updateTimeSlices(timeCollection3,normalizedTimeCollection3,timeDelta)
+        updateTimeSlices(timeCollection1,normalizedTimeCollection1,timeDelta,metricsRun1)
+        updateTimeSlices(timeCollection2,normalizedTimeCollection2,timeDelta,metricsRun2)
+        updateTimeSlices(timeCollection3,normalizedTimeCollection3,timeDelta,metricsRun3)
     
     print "done generating collections..."
     print "writing test data..."
