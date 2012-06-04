@@ -1,3 +1,8 @@
+###########################################################
+# GenerateRunData.py
+# Copyright © Zach Greenvoss 
+# Licensed under the MIT license - http://www.opensource.org/licenses/mit-license.php
+###########################################################
 import os
 import sys
 import datetime

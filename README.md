@@ -4,6 +4,10 @@ DataCleansingTool
 This is a set of Python scripts used to cleanse and analyze the output data from the PNNL's Energy Smart Data Center Facility.
 Each script is used as part of a pipeline process to get the data into an integrated and useful form for holistic analysis.
 
+MasterRun.py
+-This will run all of the scripts below in a pipeline.
+-It will handle the intermediary steps and call each script with the appropriate parameters.
+
 ParseMetricData.py
 -This script is the first step in the pipeline.  It will parse through a directory containing the metric data and gather all metric runs into a single large csv file.  This file will have the timestamp as the first column, and the superset of all captured metrics as the columns.
 -Note that this produces a fairly sparse matrix of data - as the metrics are captured at different timestamps so much of the timestamps have blank cells for the metric data
@@ -23,21 +27,14 @@ CombineRunDataMetricData.py
 -This combines the previous two output files into a new csv file.
 -This new file will contain all the metric data for each available time slice, and will now contain all the MPI counts for the given time slice as well.
 
---------------------------------
+GenerateDeltas.py
+-This iterates over the previous file and finds all the deltas for each metric.
+-These deltas are output to a new column added to each metric column.
 
-Example calling sequence
+RemoveUnchangingMetrics.py
+-This will drop any metric columns that do not have a minimum number of deltas.
+-This will produce a new output file with only "interesting" metrics retained.
 
-Assuming the DataCleansingTool directory is installed at the same level as the extracted run data, the following commands will transform the data and output the required files into an output directory.
-
-    DataCleansingTool: mkdir output
-    DataCleansingTool: python ParseMetricData.py ../LD_A1_56p_2ppn_28n_IO-BASIC_even_RAWDATA/POWER-COOLING_perMetricPerTrial/ output/ <500>
-    DataCleansingTool: python PopulateSparseData.py output/TimeData1.csv
-    DataCleansingTool: python PopulateSparseData.py output/TimeData2.csv
-    DataCleansingTool: python PopulateSparseData.py output/TimeData3.csv
-    Note: The following commands take hours to complete...
-    DataCleansingTool: python GenerateRunData.py output/TimeData1.csv ../LD_A1_56p_2ppn_28n_IO-BASIC_even_RAWDATA/t1/output/sysmpi-parsed/  output/MPIResultsTest1.csv
-    DataCleansingTool: python GenerateRunData.py output/TimeData2.csv ../LD_A1_56p_2ppn_28n_IO-BASIC_even_RAWDATA/t2/output/sysmpi-parsed/ output/MPIResultsTest2.csv
-    DataCleansingTool: python GenerateRunData.py output/TimeData3.csv ../LD_A1_56p_2ppn_28n_IO-BASIC_even_RAWDATA/t3/output/sysmpi-parsed/ output/MPIResultsTest3.csv
-    DataCleansingTool: python CombineRunDataMetricData.py output/TimeData1.csvConverted.csv output/MPIResultsTest1.csv output/combinedData1.csv
-    DataCleansingTool: python CombineRunDataMetricData.py output/TimeData2.csvConverted.csv output/MPIResultsTest2.csv output/combinedData2.csv
-    DataCleansingTool: python CombineRunDataMetricData.py output/TimeData3.csvConverted.csv output/MPIResultsTest3.csv output/combinedData3.csv
+FindHighestChangingMetrics.py
+-This will find the highest changing metrics and produce a set of charts for them.
+-Note this script requires both the numpy and matplotlib third party libraries to use.
